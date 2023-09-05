@@ -364,6 +364,7 @@ class StateDependencyPutFindView extends StatelessWidget {
 - `Get.find` call
 
 ```dart
+/// Building for next page
 class NextPageView extends StatelessWidget {
    NextPageView({Key? key}) : super(key: key);
 
