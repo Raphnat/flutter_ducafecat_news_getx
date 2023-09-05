@@ -168,7 +168,7 @@ lib/pages/category/widgets/news_page_list.dart
          onRefresh: controller. onRefresh,
          // Pull up page to scroll down and load data.
          onLoading: controller. onLoading,
-         /// Dynamically builds each item based on the aspect ratio of user's device.
+         // Dynamically builds each item based on the aspect ratio of user's device.
          child: CustomScrollView(
            slivers: [
              SliverPadding(
@@ -231,10 +231,10 @@ lib/pages/category/controller.dart
    void onLoading() {
      if (state. newsList. length < total) {
        fetchNewsList().then((_) {
-         /// Loading is completed if every element satisfies the loading requirement.
+         // Loading is completed if every element satisfies the loading requirement.
          refreshController. loadComplete();
        }).catchError((_) {
-         /// Loading produces an error if not every element satisfies the loading requirement.
+         // Loading produces an error if not every element satisfies the loading requirement.
          refreshController. loadFailed();
        });
      } else {
@@ -588,6 +588,7 @@ document
 `lib/common/routes/pages.dart`
 
 ```dart
+// Setting up the different routes
 class AppRoutes {
    static const INITIAL = '/';
    static const SIGN_IN = '/sign_in';
@@ -608,7 +609,7 @@ class AppPages {
    static List<String> history = [];
 
    static final List<GetPage> routes = [
-     // no login
+     // If no login, redirect to welcome page.
      GetPage(
        name: AppRoutes. INITIAL,
        page: () => WelcomePage(),
@@ -639,6 +640,7 @@ class RouteAuthMiddleware extends GetMiddleware {
    RouteAuthMiddleware({required this.priority});
 
    @override
+   // Need to ask what does the redirect here do
    RouteSettings? redirect(String? route) {
      if (UserStore.to.isLogin ||
          route == AppRoutes. SIGN_IN ||
@@ -808,36 +810,38 @@ Encapsulated into a global object `lib/common/services/storage.dart`
 class StorageService extends GetxService {
    static StorageService get to => Get. find();
    late final SharedPreferences_prefs;
-
+  
+   // Initilization.
    Future<StorageService> init() async {
      _prefs = await SharedPreferences. getInstance();
      return this;
    }
 
+   // Changing strings in the database.
    Future<bool> setString(String key, String value) async {
      return await _prefs.setString(key, value);
    }
-
+   // Changing bools in the database.
    Future<bool> setBool(String key, bool value) async {
      return await _prefs.setBool(key, value);
    }
-
+   // Changing lists in the database.
    Future<bool> setList(String key, List<String> value) async {
      return await _prefs.setStringList(key, value);
    }
-
+   // Getting specific string from the database.
    String getString(String key) {
      return _prefs. getString(key) ?? '';
    }
-
+   // Getting specific bool from the database.
    bool getBool(String key) {
      return _prefs. getBool(key) ?? false;
    }
-
+   // Getting specific list from the database.
    List<String> getList(String key) {
      return _prefs. getStringList(key) ?? [];
    }
-
+   // Removing data from the database.
    Future<bool> remove(String key) async {
      return await _prefs. remove(key);
    }
@@ -944,6 +948,7 @@ class UserAPI {
    static Future<UserLoginResponseEntity> login({
      UserLoginRequestEntity? params,
    }) async {
+     // Need to ask what this is for
      var response = await HttpUtil(). post(
        '/user/login',
        data: params?.toJson(),
@@ -1010,7 +1015,7 @@ void onError(ErrorEntity eInfo) {
 
 > Once the `eInfo.code` is found to be `401`, the onLogout operation will be performed directly, and a message prompt will pop up.
 
-`ErrorEntity` is my encapsulated error message format
+`ErrorEntity` is the encapsulated error message format
 
 ```dart
 /// Error message.
@@ -1109,7 +1114,7 @@ class UserStore extends GetxController {
    final_isLogin = false. obs;
    // Token for cache.
    String token = '';
-   // User profile.
+   // User's profile.
    final_profile = UserLoginResponseEntity().obs;
 
    bool get isLogin => _isLogin. value;
