@@ -212,10 +212,10 @@ lib/pages/category/controller.dart
   
    void onRefresh() {
      fetchNewsList(isRefresh: true). then((_) {
-       /// Refresh is completed if every element satisfies the refresh requirement.
+       /// Refresh is completed if every element satisfies the refresh requirement(Changes in the API).
        refreshController. refreshCompleted(resetFooterState: true);
      }).catchError((_) {
-       /// Refresh fails if not every element satisfies the refresh requirement.
+       /// Refresh fails if not every element satisfies the refresh requirement (No change in API).
        refreshController. refreshFailed();
      });
    }
@@ -238,7 +238,7 @@ lib/pages/category/controller.dart
          refreshController. loadFailed();
        });
      } else {
-       /// Returns `false` if API has no changes.
+       /// Returns false / no data if API has no changes.
        refreshController.loadNoData();
      }
    }
