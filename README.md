@@ -128,7 +128,7 @@ lib/pages/category/state.dart
 
 ```dart
 class CategoryState {
-   // news page
+   // Declared a list variable and made it observable (obs).
    RxList<NewsItem> newsList = <NewsItem>[].obs;
 }
 ```
@@ -140,6 +140,8 @@ lib/pages/category/widgets/news_page_list.dart
 ```dart
 class _NewsPageListState extends State<NewsPageList>
      with AutomaticKeepAliveClientMixin {
+  // Unless you override AutomaticKeepAliveClientMixin, using a
+  // non-existent member results in an error (not entirely sure what error it causes).
    @override
    bool get wantKeepAlive => true;
 
@@ -153,28 +155,34 @@ lib/pages/category/widgets/news_page_list.dart
 
 ```dart
    @override
+   /// Building the webpage
    Widget build(BuildContext context) {
      super. build(context);
      return GetX<CategoryController>(
        init: controller,
        builder: (controller) => SmartRefresher(
          enablePullUp: true,
+         // Refers to page scrolling up and down controller. 
          controller: controller. refreshController,
+         // Pull down page to scroll up and refresh data. 
          onRefresh: controller. onRefresh,
+         // Pull up page to scroll down and load data.
          onLoading: controller. onLoading,
+         /// Dynamically builds each item based on the aspect ratio of user's device.
          child: CustomScrollView(
            slivers: [
              SliverPadding(
                padding: EdgeInsets.symmetric(
                  vertical: 0.w,
                  horizontal: 0.w,
-               ),
+               ), 
                sliver: SliverList(
                  delegate: SliverChildBuilderDelegate(
                    (content, index) {
                      var item = controller.state.newsList[index];
                      return newsListItem(item);
                    },
+                   // childCount is the amount of data there is 
                    childCount: controller.state.newsList.length,
                  ),
                ),
@@ -201,10 +209,13 @@ lib/pages/category/controller.dart
 - `onRefresh` Pull down to refresh
 
 ```dart
+  
    void onRefresh() {
      fetchNewsList(isRefresh: true). then((_) {
+       /// Refresh is completed if every element satisfies the refresh requirement.
        refreshController. refreshCompleted(resetFooterState: true);
      }).catchError((_) {
+       /// Refresh fails if not every element satisfies the refresh requirement.
        refreshController. refreshFailed();
      });
    }
@@ -220,11 +231,14 @@ lib/pages/category/controller.dart
    void onLoading() {
      if (state. newsList. length < total) {
        fetchNewsList().then((_) {
+         /// Loading is completed if every element satisfies the loading requirement.
          refreshController. loadComplete();
        }).catchError((_) {
+         /// Loading produces an error if not every element satisfies the loading requirement.
          refreshController. loadFailed();
        });
      } else {
+       /// Returns `false` if API has no changes.
        refreshController.loadNoData();
      }
    }
@@ -239,7 +253,7 @@ lib/pages/category/controller.dart
 - `fetch` all data
 
 ```dart
-   // pull data
+   /// Function to pull data.
    Future<void> fetchNewsList({bool isRefresh = false}) async {
      var result = await NewsAPI. newsPageList(
        params: NewsPageListRequestEntity(
@@ -256,7 +270,7 @@ lib/pages/category/controller.dart
      } else {
        curPage++;
      }
-
+     // Need to ask what is the purpose of ! in (result.items!)
      state.newsList.addAll(result.items!);
    }
 ```
@@ -266,7 +280,7 @@ lib/pages/category/controller.dart
 - `dispose` remembers to dispose
 
 ```dart
-   ///dispose release memory
+   /// Disposes releases memory? (Need to ask what is the purpose of this)
    @override
    void dispose() {
      super.dispose();
@@ -387,6 +401,7 @@ class NextPageView extends StatelessWidget {
 The advantage is less code, directly use `controller` member variables to access
 
 ```dart
+/// Not entirely sure what this does , need to ask
 class HellowordWidget extends GetView<NotfoundController> {
    @override
    Widget build(BuildContext context) {
@@ -397,7 +412,7 @@ class HellowordWidget extends GetView<NotfoundController> {
 }
 ```
 
-### Meet `Mixin` to customize
+### Using `Mixin` to customize
 
 Use the `Mixin with` feature to directly wrap `StatefulWidget` `StatelessWidget`
 
@@ -406,6 +421,7 @@ This is inevitable
 - AutomaticKeepAliveClientMixin
 
 ```dart
+/// Reusing AutomaticKeepAliveClientMixin function from _NewsPageListState class
 class _NewsPageListState extends State<NewsPageList>
      with AutomaticKeepAliveClientMixin {
    @override
@@ -421,6 +437,7 @@ class _NewsPageListState extends State<NewsPageList>
 - TickerProviderStateMixin
 
 ```dart
+/// Reusing TickerProviderStateMixin function from StaggerRoute class
 class StaggerRoute extends StatefulWidget {
    @override
    _StaggerRouteState createState() => _StaggerRouteState();
@@ -499,11 +516,11 @@ dependencies:
 
 ```dart
 
-   /// The scheme is opened internally
+   /// The URL is opened internally.
    bool isInitialUriIsHandled = false;
    StreamSubscription? uriSub;
 
-   // open for the first time
+   /// If URL is opened for the first time.
    Future<void> handleInitialUri() async {
      if (!isInitialUriIsHandled) {
        isInitialUriIsHandled = true;
@@ -512,7 +529,7 @@ dependencies:
          if (uri == null) {
            print('no initial uri');
          } else {
-           // Get the scheme request here
+           // Getting the URL request here.
            print('got initial uri: $uri');
          }
        } on PlatformException {
@@ -523,11 +540,11 @@ dependencies:
      }
    }
 
-   // Intervene when the program opens
+   /// Intervene when the program from the URL opens.
    void handleIncomingLinks() {
      if (!kIsWeb) {
        uriSub = uriLinkStream. listen((Uri? uri) {
-         // Get the scheme request here
+         // Get the URL request here
          print('got uri: $uri');
 
          if (uri != null && uri.path == '/notify/category') {
@@ -538,7 +555,7 @@ dependencies:
        });
      }
    }
-
+   // Clears the URL cache 
    @override
    void dispose() {
      uriSub?. cancel();
@@ -612,10 +629,11 @@ By inheriting `GetMiddleware` and overriding the `redirect` method, if you are n
 `lib/common/middlewares/router_auth.dart`
 
 ```dart
-/// Check if you are logged in
+/// Checks if you are logged in.
 class RouteAuthMiddleware extends GetMiddleware {
-   // priority number is small and has high priority
+   // If priority number is smaller , it has higher priority.
    @override
+   // Need to ask what the ? in int? does. 
    int? priority = 0;
 
    RouteAuthMiddleware({required this.priority});
@@ -638,14 +656,14 @@ class RouteAuthMiddleware extends GetMiddleware {
 
 ### Welcome Screen
 
-If it is the first time to log in, go to the welcome screen, if you have logged in, go to the home page, and if you have not logged in, go to the login page.
+If it is the first time to log in, go to the welcome screen, if you have logged in before, you go to the home page, and if you have not logged in, go to the login page.
 
 `lib/common/middlewares/router_welcome.dart`
 
 ```dart
-/// The first welcome page
+/// Welcome page when you first log in.
 class RouteWelcomeMiddleware extends GetMiddleware {
-   // priority number is small and has high priority
+   // If priority number is smaller , it has higher priority.
    @override
    int? priority = 0;
 
@@ -671,6 +689,7 @@ It mainly uses the global mechanism of `GetxService` to encapsulate some functio
 `lib/common/services/storage.dart`
 
 ```dart
+/// Stores data in the storage.dart folder , efficient as data can be stored in 1 place , only needs to be called once to retrieve data
 class StorageService extends GetxService {
    static StorageService get to => Get. find();
    late final SharedPreferences_prefs;
@@ -692,7 +711,7 @@ After the definition, complete the necessary initialization before `run man`, so
 ```dart
 
 class Global {
-   /// initialization
+   /// Initialization of global class.
    static Future init() async {
      WidgetsFlutterBinding.ensureInitialized();
      await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -841,7 +860,7 @@ There is one thing I would like to suggest to everyone, that is, when the api in
 Example `lib/common/entities/user.dart`
 
 ```dart
-// registration request
+/// When a user registers.
 class UserRegisterRequestEntity {
    String email;
    String password;
@@ -863,7 +882,7 @@ class UserRegisterRequestEntity {
        };
 }
 
-// login request
+// When a user logs in
 class UserLoginRequestEntity {
    String email;
    String password;
@@ -885,7 +904,7 @@ class UserLoginRequestEntity {
        };
 }
 
-// login return
+// Login return.
 class UserLoginResponseEntity {
    String? accessToken;
    String? displayName;
@@ -919,9 +938,9 @@ class UserLoginResponseEntity {
 api interface code
 
 ```dart
-/// user
+/// User class.
 class UserAPI {
-   /// Log in
+   /// If login is successful.
    static Future<UserLoginResponseEntity> login({
      UserLoginRequestEntity? params,
    }) async {
@@ -956,9 +975,10 @@ When you log out, you need to clear the local cache, such as `token` `profile` d
 Specific code can refer to `lib/common/store/user.dart`
 
 ```dart
-   // log out
+   // When user logs out.
    Future<void> onLogout() async {
      if (_isLogin. value) await UserAPI. logout();
+     // Clears users cache.
      await StorageService.to.remove(STORAGE_USER_TOKEN_KEY);
      _isLogin. value = false;
      token = '';
@@ -970,7 +990,7 @@ Let’s talk about 401. This is the unauthorized status returned by the server. 
 This operation can be placed in dio's error handling `lib/common/utils/http.dart`
 
 ```dart
-// error handling
+// Error handling.
 void onError(ErrorEntity eInfo) {
      print('error. code -> ' +
          eInfo.code.toString() +
@@ -993,7 +1013,7 @@ void onError(ErrorEntity eInfo) {
 `ErrorEntity` is my encapsulated error message format
 
 ```dart
-// error message
+/// Error message.
    ErrorEntity createErrorEntity(DioError error) {
      switch (error. type) {
        case DioErrorType. cancel:
@@ -1061,7 +1081,7 @@ If the permission check is involved on the front end, you can still write it in 
 
 ```dart
 class AuthorityMiddleware extends GetMiddleware {
-   // priority number is small and has high priority
+   // If priority number is smaller , it has higher priority.
    @override
    int? priority = 0;
 
@@ -1085,11 +1105,11 @@ Maintain the status of whether the user's `token` `profile` is logged in or not.
 class UserStore extends GetxController {
    static UserStore get to => Get. find();
 
-   // whether to log in
+   // Whether to log in.
    final_isLogin = false. obs;
-   // token token
+   // Token for cache.
    String token = '';
-   // user profile
+   // User profile.
    final_profile = UserLoginResponseEntity().obs;
 
    bool get isLogin => _isLogin. value;
@@ -1106,30 +1126,33 @@ class UserStore extends GetxController {
      }
    }
 
-   // save the token
+   // Saving the users token.
    Future<void> setToken(String value) async {
      await StorageService.to.setString(STORAGE_USER_TOKEN_KEY, value);
      token = value;
    }
 
-   // get profile
+   // Getting users profile.
    Future<void> getProfile() async {
      if (token. isEmpty) return;
      var result = await UserAPI. profile();
      _profile(result);
      _isLogin. value = true;
+     // Retrieves users profile via JSON from API. 
      StorageService.to.setString(STORAGE_USER_PROFILE_KEY, jsonEncode(result));
    }
 
-   // save profile
+   // Saving users profile.
    Future<void> saveProfile(UserLoginResponseEntity profile) async {
      _isLogin. value = true;
+     // Saves users profile by changing it via API
      StorageService.to.setString(STORAGE_USER_PROFILE_KEY, jsonEncode(profile));
    }
 
-   // log out
+   // Log out function.
    Future<void> onLogout() async {
      if (_isLogin. value) await UserAPI. logout();
+     // Removing users token / cache.
      await StorageService.to.remove(STORAGE_USER_TOKEN_KEY);
      _isLogin. value = false;
      token = '';
@@ -1158,3 +1181,6 @@ solve
 ```
 
 end
+
+## From Raphael , What I need help with
+CTRL + f "// Need to ask "
