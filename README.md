@@ -13,9 +13,9 @@ https://space.bilibili.com/404904528/channel/detail?cid=177514&ctype=0
 
 ## Directory Structure
 
-![](README/catalog.png)
+![](README/directorystructure.png)
 
-### Common components
+### Components in common folder
 
 | Name | Description |
 | ----------- | -------------- |
@@ -29,9 +29,6 @@ https://space.bilibili.com/404904528/channel/detail?cid=177514&ctype=0
 | values | Values |
 | widgets | Public components |
 
-### Business page interface
-
-![One-way data flow](README/one-way-data-flow-04fe46332c1ccb3497ecb04b94e55b97.png)
 
 The interface code splitting also inherits the design idea of redux, splitting view, action, and state.
 
@@ -232,7 +229,7 @@ class ApplicationBinding implements Bindings {
 }
 ```
 
-Because this `CategoryController` belongs to `Application` and is loaded by the route
+`CategoryController` belongs to `Application` and is loaded by the route.
 
 ## State Management
 
@@ -374,68 +371,13 @@ class _StaggerRouteState extends State<StaggerRoute> with TickerProviderStateMix
    final controller = Get. find<StaggerController>();
 ```
 
-### Don't respond to data overuse
 
-- Many times, you may not need the response data
-
-   - Single page data list
-   - No boast page, boast component situation
-   - form processing
-
-- Recommended usage scenarios
-
-   - Global data: user information, chat push, style color theme
-   - Single-page multi-component interaction: chat interface
-   - Multi-page switching: shopping cart
-
-> Please make it clear that `GetX` is a component encapsulation method, it only includes `routing`, `state management`, `popup box`...
 
 ## Deep Linking way to open APP externally
 
 - Effect
 
 ![](README/scheme.gif)
-
-- refer to
-
-   - https://flutter.dev/docs/development/ui/navigation/deep-linking
-   - https://developer.android.com/codelabs/basic-android-kotlin-training-activities-intents#0
-   - https://developer.android.com/reference/android/content/Intent
-   - https://www.runoob.com/w3cnote/android-tutorial-intent-base.html
-   - https://pub.flutter-io.cn/packages/uni_links
-
-- android
-
-> android/app/src/main/AndroidManifest.xml
-
-```xml
-<activity
-   ... >
-   ...
-     <intent-filter>
-         <action android:name="android.intent.action.VIEW"/>
-         <category android:name="android.intent.category.DEFAULT"/>
-         <category android:name="android.intent.category.BROWSABLE"/>
-         <data
-             android:scheme="newsgetx"
-             />
-     </intent-filter>
-</activity>
-```
-
-- ios
-
-> Runner -> TARGETS -> Info -> URL Types
-
-![](README/2021-09-18-22-26-23.png)
-
-- Plugin uni_links
-
-```yaml
-dependencies:
-   ...
-   uni_links: ^0.5.1
-```
 
 - flutter code
 
@@ -780,13 +722,9 @@ class StorageService extends GetxService {
 
 ## Data Model
 
-It is recommended that you use the three-party json to model plug-in
-
-I am using [Paste JSON as Code](https://marketplace.visualstudio.com/items?itemName=quicktype.quicktype)
-
 These instance objects are placed in the `lib/common/entities` directory
 
-There is one thing I would like to suggest to everyone, that is, when the api interface is requested, the instance object should also be written to strictly control the type, so as to facilitate troubleshooting, otherwise it will be `map` and it will be difficult for everyone to maintain in the later stage.
+[//]: <There is one thing I would like to suggest to everyone, that is, when the api interface is requested, the instance object should also be written to strictly control the type, so as to facilitate troubleshooting, otherwise it will be `map` and it will be difficult for everyone to maintain in the later stage.>
 
 Example `lib/common/entities/user.dart`
 
@@ -886,25 +824,11 @@ class UserAPI {
 
 > It can be seen that the input and output of this interface have been packaged, so that it is very convenient to debug later with strong typing.
 
-## http pull data
-
-I didn't use `GetConnect`, but used `dio`, mainly for robustness.
-
-All operations are still encapsulated in `lib/common/utils/http.dart`
-
-> I will subsidize the code, it is too long, please read it yourself
->
-> Encapsulates common restful operations `get` `post` `put` `delete` `patch`
->
-> Added `postForm` `postStream` for individual server components
->
-> Error handling `onError` lists common errors
-
 ## User login logout & 401
 
-When you log out, you need to clear the local cache, such as `token` `profile` data.
+When you log out, you need to clear the local cache, such as the `token` and `profile` data.
 
-Specific code can refer to `lib/common/store/user.dart`
+For code used refer to `lib/common/store/user.dart`
 
 ```dart
    // When user logs out.
@@ -1093,24 +1017,6 @@ class UserStore extends GetxController {
 
 ```
 
-## Some common mistakes
-
-### The network has no permission under macOS
-
-error message
-
-```
-SocketException: Connection failed (OS Error: Operation not permitted, errno = 1)
-```
-
-solve
-
-`macos/Runner/DebugProfile.entitlements`
-
-```
-<key>com.apple.security.network.client</key>
-<true/>
-```
 
 end
 
