@@ -1,19 +1,4 @@
 # flutter_ducafecat_news_getx
-## Interface api description
-  <img src="https://ducafecat.oss-cn-beijing.aliyuncs.com/ducafecat/video-ducafecat-banner.png" alt="Cat Brother Video Station" >
-- Api address 
-
-https://mock.apifox.cn/m1/1124717-0-default
-
-- Documentation address
-
-https://www.apifox.cn/apidoc/project-1124717/api-24266149
-
-- Apifox import files
-
-`doc/newsclient-api.apifox.json`
-
-https://www.apifox.cn/
 
 ## Illustration
 
@@ -25,65 +10,6 @@ News Client Getx Version - Project Template
 
 https://space.bilibili.com/404904528/channel/detail?cid=177514&ctype=0
 
-## How to improve code quality & efficiency
-
-![](README/architecture.png)
-
-### 1. Specifications
-Use the same core concepts to develop the projects, such as but not limited to, Coding specifications, directory rules, model definitions, and layout schemes.
-
-[Effective Dart: Style](https://dart.dev/guides/language/effective-dart/style)
-[Flutter_Go Code Development Specification.md](https://github.com/alibaba/flutter-go/blob/master/Flutter_Go%20%E4%BB%A3%E7%A0%81%E5%BC%80%E5 %8F%91%E8%A7%84%E8%8C%83.md)
-
-### 2. Templates
-
-Common and common things are extracted, such as: routing, global data, authentication, authentication, offline login, interface management, data model, program upgrade, data verification, three-level cache, error collection, and behavior analysis.
-
-### 3. Codebase
-
-This is the business function. You can condense all of them in a single project which is recommended, instead of many packages, which are difficult to manage.
-
-Common services include: welcome interface , registration, login, three-way login, chatting, video, photos, SKU, shopping cart, distribution, map, message push, comment, waterfall, category subscription, attribute table, as well as carousel.
-
-## Supporting vscode plugin
-
-- [GetX Snippets](https://marketplace.visualstudio.com/items?itemName=get-snippets.get-snippets)
-
-   Required code hints, code blocks
-
-- [Json to Dart Model](https://marketplace.visualstudio.com/items?itemName=hirantha.json-to-dart)
-
-   Supports null safety, highly recommended
-
-- [Flutter GetX Generator - Cat Brother](https://marketplace.visualstudio.com/items?itemName=ducafecat.getx-template)
-
-   This plugin is used to quickly create `page` code, plans (json to dart, iconfont, test unit)
-
-## refer to
-
-- [get_cli](https://github.com/jonataslaw/get_cli)
-- [getx_pattern](https://kauemurakami.github.io/getx_pattern/)
-- [flutter-go](https://github.com/alibaba/flutter-go)
-- [News first edition flutter_learn_news](https://github.com/ducafecat/flutter_learn_news)
-- [写夜子 flutter-getx-template](https://github.com/xieyezi/flutter-getx-template)
-- [Getx_quick_start](https://github.com/ducafecat/getx_quick_start)
-- [flutter_use](https://github.com/CNAD666/flutter_use)
-- [redux part-1-overview-concepts](https://redux.js.org/tutorials/essentials/part-1-overview-concepts)
-- [todo_getx](https://github.com/loicgeek/todo_getx)
-
-## Mock data
-
-- api
-
-https://yapi.ducafecat.tech/mock/11
-
-- Check the interface mode
-
-```
-https://yapi.ducafecat.tech
-api@ducafecat.tech
-123456
-```
 
 ## Directory Structure
 
